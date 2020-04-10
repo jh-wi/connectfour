@@ -1,0 +1,83 @@
+body {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    align-self: center;
+    position: absolute;
+    transform:translate(5%, 5%);
+}
+
+#head {
+    font-size: 48px;
+}
+
+#status {
+    font-size: 32px;
+}
+
+#restart {
+    width: 100px;
+    height: 50px;
+    color: white;
+    background-color: lightsalmon;
+    padding: 2px;
+    text-align: center;
+    vertical-align: middle;
+    border: 3px solid salmon;
+    font-size: 22px;
+    margin-right: 10px;
+}
+
+.grid_container {
+    display: grid;
+    grid-template-columns: 100px 100px 100px 100px 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px 100px 100px 100px;
+    background-color: black;
+    padding: 5px;
+    width: 700px;
+}
+
+.grid_item {
+    background-color: white;
+    padding: 5px;
+    text-align: center;
+    border: 2px solid black;
+}
+
+.grid_button_container {
+    display: grid;
+    grid-template-columns: 100px 100px 100px 100px 100px 100px 100px;
+    grid-template-rows: 50px;
+    background-color: salmon;
+    padding: 5px;
+    width: 700px;
+    margin-top: 5px;
+}
+
+.grid_button {
+    background-color: lightsalmon;
+    padding: 2px;
+    text-align: center;
+    vertical-align: middle;
+    border: 2px solid salmon;
+    color: white;
+    font-size: 22px;
+}
+
+#clear {
+    background-color: whitesmoke;
+}
+
+#red {
+    background-color: red;
+}
+
+#yellow {
+    background-color: yellow;
+}
+
+#redwin {
+    background-color: darkred;
+}
+
+#yellowwin {
+    background-color: gold;
+}
