@@ -14,13 +14,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let redTurn = true;
     status.innerText = "Red's turn.";
 
+    //keeps track of whether a space is clear, red, or yellow
     let grid = new Array(xSize * ySize);
+
+    //references to the grids so we can change their colors
     let gridDivs = new Array(xSize * ySize);
     
     let gameover = false;
 
     //create a grid of empty divs
     for (let i = 0; i < xSize; i++) {
+
+        //button div for each column
         let newButton = document.createElement("input");
         let buttonContent = document.createElement("div");
         buttonContent.innerText = "Place";
@@ -28,21 +33,15 @@ document.addEventListener("DOMContentLoaded", () => {
         newButton.type = "button";
         newButton.value = "Place";
         newButton.id = ("" + i);
-
-        //newButton.appendChild(buttonContent);
         buttonDiv.appendChild(newButton);
 
-        //buttons[i] = newButton;
-
-        //grid[i] = new Array(ySize);
+        //grid div creation for every row in the column
         for (let j = 0; j < ySize; j++) {
             let el = document.createElement("div");
 
-            //let content = document.createTextNode("" + (i * ySize + j));
             el.className = "grid_item";
             el.id = "clear";
 
-            //el.appendChild(content);
             gridDiv.appendChild(el);
 
             grid[i * ySize + j] = clearID;
@@ -50,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    //create a button for each column and add functionality
+    //create a button for each column and add place functionality to it
     let buttons = document.getElementsByClassName("grid_button");
     for (let i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener("click", (e) => {
@@ -58,14 +57,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            let x = parseInt(e.target.id);
-            //let rowFromBottom = 3;
-            //let bottom = (xSize * (ySize - rowFromBottom - 1) + x);
-            //console.log(bottom);
+            let x = parseInt(e.target.id); //which column the button was clicked
             let couldPlace = false;
+
+            //go from bottom to top trying to place in column x
             for (let rowFromBottom = 0; rowFromBottom < ySize; rowFromBottom++) {
+
+                //calculates the 2D grid location from a 1D array index
                 let index = (xSize * (ySize - rowFromBottom - 1) + x);
-                console.log(index + ", " + grid[index]);
+
+                //only place if the space is clear
                 if (grid[index] == clearID) {
                     if (redTurn) {
                         //place red
@@ -80,13 +81,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     couldPlace = true;
                     redTurn = !redTurn;
-                    if (completed(grid, xSize, ySize, !redTurn, gridDivs)) {
+                    if (completed(grid, xSize, ySize, !redTurn, gridDivs)) { //check if someone won when a move is made
                         gameover = true;
                         status.innerText = "GAME OVER. Red wins!";
                         if (redTurn) {
                             status.innerText = "GAME OVER. Yellow wins!";
                         }
-                    } else if (!notFull(grid)) {
+                    } else if (!notFull(grid)) { //if there aren't any open slots left, it's a draw
                         gameover = true;
                         status.innerText = "Draw!";
                         return;
@@ -100,13 +101,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (redTurn) {
                     status.innerText = "That column is full! Red's turn.";
                 }
-            } else {
-                //check if someone won
             }
         });
     }
 });
 
+//returns true if it finds a clear space
 function notFull(grid) {
     for (let i = 0; i < grid.length; i++) {
         if (grid[i] == 0) {
@@ -116,23 +116,26 @@ function notFull(grid) {
     return false;
 }
 
-//TODO: add a function that takes in a grid and position and returns if there are at least 4 reds in a row or 4 yellows in a row
+//takes in a grid and a position and returns as soon as it finds 4 reds in a row or 4 yellows in a row
 function completed(grid, width, height, redTurn, gridDivs) {
     //need to search 4 directions on every tile: to the northeast, east, southeast, south
+
+    //can change this to make it connect 5 or connect 6 instead of connect 4
     let winLength = 4;
+
+    //for every spot in the grid, 
     for (let i = 0; i < grid.length; i++) {
-        //let c = i;
         let x = i % width;
         let y = Math.floor(i / width);
-        //console.log(x + ", " + y);
 
+        //don't search if we are looking at a clear space
         let id = grid[i];
         if (id == 0) {
             anyClear = true;
             continue;
         }
 
-        //northwest
+        //southeast
         let won = true;
         for (let j = 0; j < winLength; j++) {
             if (inbounds(width, height, x + j, y + j)) {
@@ -142,7 +145,7 @@ function completed(grid, width, height, redTurn, gridDivs) {
                 }
             } else {
                 won = false;
-                break;
+                continue;
             }
         }
         if (won) {
@@ -167,7 +170,7 @@ function completed(grid, width, height, redTurn, gridDivs) {
                 }
             } else {
                 won = false;
-                break;
+                continue;
             }
         }
         if (won) {
@@ -192,7 +195,7 @@ function completed(grid, width, height, redTurn, gridDivs) {
                 }
             } else {
                 won = false;
-                break;
+                continue;
             }
         }
         if (won) {
@@ -207,7 +210,7 @@ function completed(grid, width, height, redTurn, gridDivs) {
             return true;
         }
 
-        //southeast
+        //southwest
         won = true;
         for (let j = 0; j < winLength; j++) {
             if (inbounds(width, height, x - j, y + j)) {
@@ -217,9 +220,10 @@ function completed(grid, width, height, redTurn, gridDivs) {
                 }
             } else {
                 won = false;
-                break;
+                continue;
             }
         }
+
         if (won) {
             for (let j = 0; j < winLength; j++) {
                 let index = (x - j) + width * (y + j);
@@ -232,17 +236,22 @@ function completed(grid, width, height, redTurn, gridDivs) {
             return true;
         }
     }
+
+    //no string of winLength was found, so no one has won
     return false;
 }
 
+//make sure a spot in the grid is actually in the grid
 function inbounds (width, height, x, y) {
     return (x < width && y < height && x >= 0 && y >= 0);
 }
 
+//returns whether the space in the grid is clear, red, or yellow
 function gridID (grid, width, x, y) {
     return (grid[x + width * y]);
 }
 
+//just refreshes the page to reset the board
 restart.addEventListener("click", () => {
     location.reload();
 });
