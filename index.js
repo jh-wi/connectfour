@@ -86,6 +86,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (redTurn) {
                             status.innerText = "GAME OVER. Yellow wins!";
                         }
+                    } else if (!notFull(grid)) {
+                        gameover = true;
+                        status.innerText = "Draw!";
+                        return;
                     }
                     break;
                 }
@@ -103,6 +107,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+function notFull(grid) {
+    for (let i = 0; i < grid.length; i++) {
+        if (grid[i] == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 //TODO: add a function that takes in a grid and position and returns if there are at least 4 reds in a row or 4 yellows in a row
 function completed(grid, width, height, redTurn, gridDivs) {
     //need to search 4 directions on every tile: to the northeast, east, southeast, south
@@ -115,6 +128,7 @@ function completed(grid, width, height, redTurn, gridDivs) {
 
         let id = grid[i];
         if (id == 0) {
+            anyClear = true;
             continue;
         }
 
